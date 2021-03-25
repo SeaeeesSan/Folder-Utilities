@@ -25,12 +25,13 @@ namespace Seaeees.Folder_Utilities.Editor
                 position = new Rect(Event.current.mousePosition,new Vector2(300,50));
                 _initialized = false;
             }
+
             EditorGUILayout.LabelField("Create Folder");
             EditorGUILayout.Space(10);
             _flags = EditorGUILayout.MaskField("Folder Name", _flags, _options);
 
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Close"))
+            if (GUILayout.Button("Cancel"))
             {
                 Close();
             }

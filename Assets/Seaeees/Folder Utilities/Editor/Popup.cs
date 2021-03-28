@@ -5,13 +5,13 @@ namespace Seaeees.Folder_Utilities.Editor
 {
     public class Popup : EditorWindow
     {
-        private int _flags;
+        private readonly string[] _optionNames = {"Scenes", "Prefabs", "Scripts", "Animations", "Materials", "Physics", "Fonts", "Textures", "Audio", "Resources", "Editor", "Plugins"};
 
-        private readonly string[] _options = {"  ", "Scenes", "Prefabs", "Scripts", "Animations", "Materials", "Physics", "Fonts", "Textures", "Audio", "Resources", "Editor", "Plugins"};
+        private bool[] _options = new bool[12];
 
         private bool _initialized = true;
 
-        [MenuItem("Assets/Create/Folder Utilities/Presets",false,0)]
+        [MenuItem("Assets/Create/Folder Utilities",false,0)]
         static void Init()
         {
             Popup window = CreateInstance<Popup>();
@@ -22,26 +22,27 @@ namespace Seaeees.Folder_Utilities.Editor
         {
             if (_initialized)
             {
-                position = new Rect(Event.current.mousePosition,new Vector2(300,50));
+                position = new Rect(Event.current.mousePosition,new Vector2(150,305));
                 _initialized = false;
             }
 
-            EditorGUILayout.LabelField("Create Folder");
-            EditorGUILayout.Space(10);
-            _flags = EditorGUILayout.MaskField("Folder Name", _flags, _options);
+            EditorGUILayout.LabelField("Folder Utilities",EditorStyles.boldLabel);
+
+            for (int i = 0; i < 12; i++)
+            {
+                _options[i] = EditorGUILayout.ToggleLeft(_optionNames[i], _options[i]);
+            }
 
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Cancel"))
-            {
-                Close();
-            }
-
-            if (GUILayout.Button("Create"))
-            {
-                FolderCreator.MakeFolders(Check(_flags));
-                Close();
-            }
+            if (GUILayout.Button("o")) ResetOptions(true);
+            if (GUILayout.Button("x")) ResetOptions(false);
             EditorGUILayout.EndHorizontal();
+
+            if (GUILayout.Button("OK"))
+            {
+                FolderCreator.MakeFolders(Check());
+                Close();
+            }
 
             if (Event.current.keyCode == KeyCode.Escape)
             {
@@ -49,22 +50,17 @@ namespace Seaeees.Folder_Utilities.Editor
             }
         }
 
-        List<string> Check(int flags)
+        void ResetOptions(bool n)
+        {
+            for (int i = 0; i < _options.Length; i++) _options[i] = n;
+        }
+
+        List<string> Check()
         {
             List<string> flag = new List<string>();
-            if ((flags & 1 << 1) != 0)  flag.Add("Scenes");
-            if ((flags & 1 << 2) != 0)  flag.Add("Prefabs");
-            if ((flags & 1 << 3) != 0)  flag.Add("Scripts");
-            if ((flags & 1 << 4) != 0)  flag.Add("Animations");
-            if ((flags & 1 << 5) != 0)  flag.Add("Materials");
-            if ((flags & 1 << 6) != 0)  flag.Add("Physics");
-            if ((flags & 1 << 7) != 0)  flag.Add("Fonts");
-            if ((flags & 1 << 8) != 0)  flag.Add("Textures");
-            if ((flags & 1 << 9) != 0)  flag.Add("Audio");
-            if ((flags & 1 << 10) != 0)  flag.Add("Resources");
-            if ((flags & 1 << 11) != 0)  flag.Add("Editor");
-            if ((flags & 1 << 12) != 0)  flag.Add("Plugins");
-
+            for (int i = 0; i < _options.Length; i++)
+                if(_options[i])
+                    flag.Add(_optionNames[i]);
             return flag;
         }
     }

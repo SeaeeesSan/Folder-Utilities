@@ -40,7 +40,7 @@ namespace Seaeees.Folder_Utilities.Editor
 
             if (GUILayout.Button("OK"))
             {
-                FolderCreator.MakeFolders(Check());
+                FolderCreator.MakeFolders(GetFolderNames());
                 Close();
             }
 
@@ -55,7 +55,7 @@ namespace Seaeees.Folder_Utilities.Editor
             for (int i = 0; i < _options.Length; i++) _options[i] = n;
         }
 
-        List<string> Check()
+        List<string> GetFolderNames()
         {
             List<string> flag = new List<string>();
             for (int i = 0; i < _options.Length; i++)
